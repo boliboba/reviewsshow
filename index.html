@@ -9,25 +9,131 @@
             background-color: #232323;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            overflow: hidden; /* Это предотвратит прокрутку страницы */
+        }
+
+        .reviews-container {
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 50px; /* Чтобы кнопки не перекрывали отзывы */
+        }
+
+        .review {
+            display: none;
+            flex-shrink: 0;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .review.active {
+            display: block;
+        }
+
+        .buttons {
+            position: fixed;
+            bottom: 20px; /* Кнопки будут внизу экрана */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        button {
+            background-color: #2C2C2C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        .counter {
+            color: white;
+            margin: 0 15px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <!-- Встраивание Telegram-поста -->
-    <script async src="https://telegram.org/js/telegram-widget.js?22" 
-            data-telegram-post="it_mentors/2852" 
-            data-width="100%"
-            data-dark="1">
-    </script>
-    <script async src="https://telegram.org/js/telegram-widget.js?22" 
-            data-telegram-post="it_mentors/2855" 
-            data-width="100%"
-            data-dark="1">
-    </script>
-    <script async src="https://telegram.org/js/telegram-widget.js?22" 
-            data-telegram-post="it_mentors/2856" 
-            data-width="100%"
-            data-dark="1">
+    <div class="reviews-container">
+        <div class="review active">
+            <!-- Встраивание первого Telegram-поста -->
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-post="it_mentors/2852" 
+                    data-width="100%"
+                    data-dark="1">
+            </script>
+        </div>
+        <div class="review">
+            <!-- Встраивание второго Telegram-поста -->
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-post="it_mentors/2855" 
+                    data-width="100%"
+                    data-dark="1">
+            </script>
+        </div>
+        <div class="review">
+            <!-- Встраивание третьего Telegram-поста -->
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-post="it_mentors/2856" 
+                    data-width="100%"
+                    data-dark="1">
+            </script>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button id="prevBtn">← Предыдущий</button>
+        <span class="counter" id="counter">Отзыв 1 из 3</span>
+        <button id="nextBtn">Следующий →</button>
+    </div>
+
+    <script>
+        const reviews = document.querySelectorAll('.review');
+        const counter = document.getElementById('counter');
+        let currentIndex = 0;
+        const totalReviews = reviews.length;
+
+        const updateCounter = () => {
+            counter.textContent = `Отзыв ${currentIndex + 1} из ${totalReviews}`;
+        };
+
+        const showReview = (index) => {
+            reviews.forEach((review, i) => {
+                review.classList.remove('active');
+                if (i === index) {
+                    review.classList.add('active');
+                }
+            });
+            updateCounter();
+        };
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentIndex = (currentIndex === 0) ? totalReviews - 1 : currentIndex - 1;
+            showReview(currentIndex);
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentIndex = (currentIndex === totalReviews - 1) ? 0 : currentIndex + 1;
+            showReview(currentIndex);
+        });
+
+        // Инициализировать отображение первого отзыва и счетчика
+        showReview(currentIndex);
     </script>
 </body>
 </html>
